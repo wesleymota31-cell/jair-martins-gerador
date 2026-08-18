@@ -30,7 +30,10 @@ const frameAssets: Record<PhotoFormat, FrameAsset[]> = {
     { name: "Verde Tem Voz", src: "/frames/square/frame-02.png" },
     { name: "Pará Tem Voz", src: "/frames/square/frame-03.png" },
   ],
-  feed: [],
+  feed: [
+    { name: "Campanha Azul", src: "/frames/feed/frame-01.png" },
+    { name: "Campanha Verde", src: "/frames/feed/frame-02.png" },
+  ],
   story: [],
 };
 
