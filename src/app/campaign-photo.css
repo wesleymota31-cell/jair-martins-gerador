@@ -14,7 +14,6 @@ body:has(.campaign-shell) .archive-tray { display: none; }
 .campaign-shell { width: min(100%, 560px); min-height: 100svh; margin: 0 auto; overflow: visible; position: relative; background: var(--white); color: var(--blue-dark); font-family: Montserrat, Arial, sans-serif; }
 .campaign-shell.is-start { background: var(--blue-dark) url('/campaign/bg-gerador.jpg') center center / cover no-repeat; }
 .campaign-shell button { font-family: inherit; }
-.campaign-shell::before { content: "1011"; position: absolute; right: -42px; top: 114px; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.09); font-weight: 900; font-size: 116px; transform: rotate(-8deg); pointer-events: none; }
 .campaign-header { height: 96px; background: var(--blue-dark); color: white; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; position: relative; overflow: hidden; }
 .campaign-header::after { content: ""; position: absolute; width: 140px; height: 12px; background: var(--yellow); transform: rotate(-32deg); right: -53px; bottom: 3px; }
 .campaign-brand { width: min(210px, 57vw); position: relative; z-index: 1; line-height: 0; }
@@ -75,7 +74,7 @@ body:has(.campaign-shell) .archive-tray { display: none; }
 .download-button:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
 
 .campaign-success { min-height: 100svh; background: var(--blue); color: white; padding: 42px 24px 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
-.campaign-success::before { top: 5%; font-size: 170px; }.success-check { width: 74px; height: 74px; border-radius: 50%; background: var(--green); display: grid; place-items: center; color: white; box-shadow: 0 0 0 9px rgba(255,255,255,.14); animation: success-in .22s ease-out; }.success-check svg { width: 38px; }
+.success-check { width: 74px; height: 74px; border-radius: 50%; background: var(--green); display: grid; place-items: center; color: white; box-shadow: 0 0 0 9px rgba(255,255,255,.14); animation: success-in .22s ease-out; }.success-check svg { width: 38px; }
 .campaign-success .campaign-kicker { margin: 0 0 12px; }.campaign-success h1 { font-size: clamp(38px, 11vw, 56px); }.final-preview { display: block; width: min(280px, 72vw); height: auto; object-fit: cover; margin: 24px auto 6px; border: 3px solid white; border-radius: 12px; box-shadow: 0 12px 30px rgba(1,29,63,.28); }.final-preview.is-story { width: min(220px, 58vw); }.success-copy { font-size: 12px; line-height: 1.5; min-height: 36px; max-width: 390px; margin: 16px 0 22px; }.campaign-success .campaign-button { margin-bottom: 12px; max-width: 430px; }.campaign-success .button-blue { border: 2px solid white; }.campaign-new-photo { color: white; border: 0; background: transparent; padding: 10px 18px 20px; display: flex; gap: 7px; align-items: center; font-size: 10px; font-weight: 800; }.campaign-new-photo svg { width: 14px; }.campaign-success .campaign-footer { margin-top: 0; flex: 0 0 auto; }
 @keyframes success-in { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
 
