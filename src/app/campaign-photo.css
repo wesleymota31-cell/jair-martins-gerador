@@ -11,7 +11,7 @@
 body:has(.campaign-shell) { background: var(--blue-dark); }
 body:has(.campaign-shell) .archive-tray { display: none; }
 .campaign-shell, .campaign-shell * { box-sizing: border-box; }
-.campaign-shell { width: min(100%, 560px); min-height: 100svh; margin: 0 auto; overflow: hidden; position: relative; background: var(--white); color: var(--blue-dark); font-family: Montserrat, Arial, sans-serif; }
+.campaign-shell { width: min(100%, 560px); min-height: 100svh; margin: 0 auto; overflow: visible; position: relative; background: var(--white); color: var(--blue-dark); font-family: Montserrat, Arial, sans-serif; }
 .campaign-shell.is-start { background: var(--blue-dark) url('/campaign/bg-gerador.jpg') center center / cover no-repeat; }
 .campaign-shell button { font-family: inherit; }
 .campaign-shell::before { content: "1011"; position: absolute; right: -42px; top: 114px; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.09); font-weight: 900; font-size: 116px; transform: rotate(-8deg); pointer-events: none; }
@@ -19,7 +19,6 @@ body:has(.campaign-shell) .archive-tray { display: none; }
 .campaign-header::after { content: ""; position: absolute; width: 140px; height: 12px; background: var(--yellow); transform: rotate(-32deg); right: -53px; bottom: 3px; }
 .campaign-brand { width: min(210px, 57vw); position: relative; z-index: 1; line-height: 0; }
 .campaign-brand img { width: 100%; height: auto; object-fit: contain; }
-.campaign-footer b i { color: var(--green); font-style: normal; }
 .official-pill { display: flex; align-items: center; gap: 5px; font-size: 9px; letter-spacing: .1em; font-weight: 800; border: 1px solid rgba(255,255,255,.3); border-radius: 99px; padding: 7px 9px; position: relative; z-index: 1; }
 .official-pill svg { width: 12px; height: 12px; color: var(--green); }
 .campaign-intro { min-height: calc(100svh - 157px); padding: 54px 24px 28px; background: linear-gradient(155deg, var(--blue) 0 43%, #0879da 43% 48%, var(--white) 48%); position: relative; }
@@ -41,9 +40,16 @@ body:has(.campaign-shell) .archive-tray { display: none; }
 .campaign-steps span b { width: 20px; height: 20px; border-radius: 50%; background: #e6edf4; display: grid; place-items: center; color: var(--blue-dark); }
 .campaign-steps span.active { color: var(--blue-dark); }.campaign-steps span.active b { background: var(--green); color: white; }
 .campaign-steps i { flex: 1; height: 2px; background: #dbe4ed; margin: 0 7px; }
-.campaign-footer { height: 61px; background: var(--blue-dark); color: white; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; font-size: 9px; font-weight: 800; letter-spacing: .08em; }
-.is-start .campaign-footer { background: rgba(1,45,97,.72); backdrop-filter: blur(5px); }
-.campaign-footer b { font-size: 24px; color: var(--yellow); letter-spacing: -.12em; }
+.campaign-footer { width: 100vw; margin-left: calc(50% - 50vw); background: #001d3f; color: #aebdd0; padding: 35px 28px 47px; font-size: 13px; line-height: 1.55; text-align: left; }
+.campaign-footer-inner { width: min(1216px, 100%); margin: 0 auto; }
+.campaign-footer-head { min-height: 59px; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+.campaign-footer-head img { width: 220px; height: auto; object-fit: contain; }
+.campaign-footer-head span { font-size: 13px; white-space: nowrap; }
+.campaign-footer-rule { height: 1px; background: rgba(174,189,208,.18); margin: 26px 0 24px; }
+.campaign-footer p { margin: 0 0 16px; letter-spacing: 0; font-weight: 400; }
+.campaign-footer p:last-child { margin-bottom: 0; }
+.campaign-footer p strong { color: var(--white); font-weight: 800; }
+.is-start .campaign-footer { background: #001d3f; backdrop-filter: none; }
 .file-input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 
 .campaign-editor { padding: 24px 18px 30px; background: #f4f8fc; min-height: calc(100svh - 96px); }
@@ -69,9 +75,17 @@ body:has(.campaign-shell) .archive-tray { display: none; }
 
 .campaign-success { min-height: 100svh; background: var(--blue); color: white; padding: 12vh 24px 0; text-align: center; display: flex; flex-direction: column; align-items: center; }
 .campaign-success::before { top: 5%; font-size: 170px; }.success-check { width: 74px; height: 74px; border-radius: 50%; background: var(--green); display: grid; place-items: center; color: white; box-shadow: 0 0 0 9px rgba(255,255,255,.14); animation: success-in .22s ease-out; }.success-check svg { width: 38px; }
-.campaign-success .campaign-kicker { margin: 30px 0 12px; }.campaign-success h1 { font-size: clamp(40px, 12vw, 60px); }.success-copy { font-size: 14px; margin: 18px 0 38px; }.campaign-success .campaign-button { margin-bottom: 12px; max-width: 430px; }.campaign-success .button-blue { border: 2px solid white; }.campaign-success .campaign-footer { margin: auto -24px 0; width: calc(100% + 48px); }
+.campaign-success .campaign-kicker { margin: 30px 0 12px; }.campaign-success h1 { font-size: clamp(40px, 12vw, 60px); }.success-copy { font-size: 14px; margin: 18px 0 38px; }.campaign-success .campaign-button { margin-bottom: 12px; max-width: 430px; }.campaign-success .button-blue { border: 2px solid white; }.campaign-success .campaign-footer { margin-top: auto; }
 @keyframes success-in { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
 
 @media (min-width: 561px) { .campaign-shell { box-shadow: 0 0 60px rgba(0,0,0,.35); }.campaign-intro { padding-left: 42px; padding-right: 42px; }.campaign-editor { padding-left: 40px; padding-right: 40px; } }
 @media (max-width: 370px) { .campaign-intro { padding-top: 38px; }.campaign-subtitle { margin-bottom: 45px; }.campaign-button { min-height: 58px; font-size: 12px; }.campaign-editor { padding: 18px 13px 24px; } }
+@media (max-width: 620px) {
+  .campaign-footer { padding: 28px 22px 34px; font-size: 11px; }
+  .campaign-footer-head { align-items: flex-start; flex-direction: column; gap: 18px; }
+  .campaign-footer-head img { width: 190px; }
+  .campaign-footer-head span { white-space: normal; font-size: 11px; }
+  .campaign-footer-rule { margin: 22px 0 20px; }
+  .campaign-footer p { margin-bottom: 13px; }
+}
 @media (prefers-reduced-motion: reduce) { .campaign-shell *, .campaign-shell *::before, .campaign-shell *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }

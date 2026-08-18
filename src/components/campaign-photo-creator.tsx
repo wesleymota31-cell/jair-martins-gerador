@@ -223,5 +223,17 @@ export function CampaignPhotoCreator() {
 }
 
 function CampaignFooter() {
-  return <footer className="campaign-footer"><span>JUNTOS, A GENTE FAZ A DIFERENÇA.</span><b>10<i>11</i></b></footer>;
+  return (
+    <footer className="campaign-footer">
+      <div className="campaign-footer-inner">
+        <div className="campaign-footer-head">
+          <NextImage src="/campaign/logo-jair.png" alt="Jair Martins 1011" width={606} height={161} />
+          <span>Jair Martins · Deputado Federal · Pará · 1011</span>
+        </div>
+        <div className="campaign-footer-rule" />
+        <p><strong>Site oficial da campanha.</strong> Conteúdo de propaganda eleitoral gratuito, de responsabilidade da candidatura identificada nesta página.</p>
+        <p>Anúncios pagos por ELEICAO 2026 JAIR LOPES MARTINS DEPUTADO FEDERAL · CNPJ 68.379.736/0001-56 · Conceição do Araguaia/PA.</p>
+      </div>
+    </footer>
+  );
 }
