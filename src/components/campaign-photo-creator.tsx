@@ -15,41 +15,29 @@ import NextImage from "next/image";
 import { ChangeEvent, PointerEvent, useCallback, useEffect, useRef, useState } from "react";
 
 type Point = { x: number; y: number };
-type FrameId = 0 | 1 | 2 | 3;
-type PhotoFormat = "feed" | "story";
+type PhotoFormat = "square" | "feed" | "story";
+type FrameAsset = { name: string; src: string };
 
 const formats = {
+  square: { label: "QUADRADO", detail: "1080 × 1080", width: 1080, height: 1080 },
   feed: { label: "FEED", detail: "1080 × 1440", width: 1080, height: 1440 },
   story: { label: "STORY", detail: "1080 × 1920", width: 1080, height: 1920 },
 } as const;
 
-const frames = [
-  { id: 0 as FrameId, name: "Movimento", className: "frame-movement" },
-  { id: 1 as FrameId, name: "Juntos", className: "frame-together" },
-  { id: 2 as FrameId, name: "1011", className: "frame-number" },
-  { id: 3 as FrameId, name: "Esperança", className: "frame-hope" },
-];
-
-function FrameArtwork({ frame, compact = false }: { frame: FrameId; compact?: boolean }) {
-  const label = frames[frame];
-  return (
-    <div className={`frame-art ${label.className} ${compact ? "is-compact" : ""}`} aria-hidden="true">
-      <span className="frame-top">JAIR MARTINS</span>
-      {frame === 1 && <span className="frame-side">JUNTOS</span>}
-      {frame === 3 && <span className="frame-tag">FAZ A DIFERENÇA</span>}
-      <div className="frame-footer">
-        <span>JAIR</span>
-        <strong>MARTINS</strong>
-        <b>10<span>11</span></b>
-      </div>
-    </div>
-  );
-}
+const frameAssets: Record<PhotoFormat, FrameAsset[]> = {
+  square: [
+    { name: "Azul 1011", src: "/frames/square/frame-01.png" },
+    { name: "Verde Tem Voz", src: "/frames/square/frame-02.png" },
+    { name: "Pará Tem Voz", src: "/frames/square/frame-03.png" },
+  ],
+  feed: [],
+  story: [],
+};
 
 export function CampaignPhotoCreator() {
   const [photo, setPhoto] = useState<string | null>(null);
-  const [frame, setFrame] = useState<FrameId>(0);
-  const [format, setFormat] = useState<PhotoFormat>("feed");
+  const [frame, setFrame] = useState(0);
+  const [format, setFormat] = useState<PhotoFormat>("square");
   const [zoom, setZoom] = useState(1);
   const [offset, setOffset] = useState<Point>({ x: 0, y: 0 });
   const [preview, setPreview] = useState<string | null>(null);
@@ -93,39 +81,15 @@ export function CampaignPhotoCreator() {
     });
   };
 
-  const drawFrame = useCallback((ctx: CanvasRenderingContext2D, selected: FrameId, width: number, height: number) => {
-    const blue = "#006CCE", dark = "#012D61", yellow = "#FFD800", green = "#43BA04";
-    const scale = width / 1080;
-    const footerTop = height * .79;
-    ctx.fillStyle = selected === 2 ? blue : dark;
-    ctx.fillRect(0, 0, width, (selected === 1 ? 115 : 82) * scale);
-    ctx.fillStyle = yellow;
-    ctx.font = `900 ${42 * scale}px Montserrat, Arial`;
-    ctx.fillText("JAIR MARTINS", 48 * scale, 58 * scale);
-    if (selected === 1) {
-      ctx.save(); ctx.translate(62 * scale, height * .55); ctx.rotate(-Math.PI / 2);
-      ctx.font = `900 ${58 * scale}px Montserrat, Arial`; ctx.fillText("JUNTOS", 0, 0); ctx.restore();
-    }
-    if (selected === 3) {
-      ctx.save(); ctx.translate(width - 150 * scale, height * .14); ctx.rotate(Math.PI / 2);
-      ctx.fillStyle = green; ctx.fillRect(0, 0, 430 * scale, 72 * scale);
-      ctx.fillStyle = "white"; ctx.font = `800 ${30 * scale}px Montserrat, Arial`; ctx.fillText("FAZ A DIFERENÇA", 24 * scale, 48 * scale); ctx.restore();
-    }
-    ctx.fillStyle = selected === 0 ? blue : dark;
-    ctx.beginPath(); ctx.moveTo(0, footerTop + 90 * scale); ctx.lineTo(width, footerTop); ctx.lineTo(width, height); ctx.lineTo(0, height); ctx.fill();
-    ctx.fillStyle = yellow;
-    ctx.beginPath(); ctx.moveTo(0, footerTop + 55 * scale); ctx.lineTo(width, footerTop - 15 * scale); ctx.lineTo(width, footerTop + 15 * scale); ctx.lineTo(0, footerTop + 105 * scale); ctx.fill();
-    ctx.fillStyle = "white"; ctx.font = `900 ${76 * scale}px Montserrat, Arial`; ctx.fillText("JAIR", 48 * scale, height - 133 * scale);
-    ctx.font = `800 ${42 * scale}px Montserrat, Arial`; ctx.fillText("MARTINS", 50 * scale, height - 79 * scale);
-    ctx.fillStyle = yellow; ctx.font = `900 ${132 * scale}px Montserrat, Arial`; ctx.fillText("10", 690 * scale, height - 80 * scale);
-    ctx.fillStyle = green; ctx.fillText("11", 855 * scale, height - 80 * scale);
-  }, []);
-
   const makeImage = useCallback(async () => {
     if (!photo) return null;
+    const selectedFrame = frameAssets[format][frame];
+    if (!selectedFrame) return null;
     const image = new Image();
     image.src = photo;
-    await image.decode();
+    const frameImage = new Image();
+    frameImage.src = selectedFrame.src;
+    await Promise.all([image.decode(), frameImage.decode()]);
     const { width: canvasWidth, height: canvasHeight } = formats[format];
     const canvas = document.createElement("canvas");
     canvas.width = canvasWidth; canvas.height = canvasHeight;
@@ -137,9 +101,9 @@ export function CampaignPhotoCreator() {
     const offsetScaleX = canvasWidth / (photoStage.current?.clientWidth || 360);
     const offsetScaleY = canvasHeight / (photoStage.current?.clientHeight || 480);
     ctx.drawImage(image, (canvasWidth - width) / 2 + offset.x * offsetScaleX, (canvasHeight - height) / 2 + offset.y * offsetScaleY, width, height);
-    drawFrame(ctx, frame, canvasWidth, canvasHeight);
+    ctx.drawImage(frameImage, 0, 0, canvasWidth, canvasHeight);
     return canvas;
-  }, [drawFrame, format, frame, offset.x, offset.y, photo, zoom]);
+  }, [format, frame, offset.x, offset.y, photo, zoom]);
 
   const finishEditing = async () => {
     const canvas = await makeImage();
@@ -215,7 +179,7 @@ export function CampaignPhotoCreator() {
           <div className="format-heading"><b>FORMATO DA FOTO</b><span>ESCOLHA ONDE VAI PUBLICAR</span></div>
           <div className="format-options">
             {(Object.keys(formats) as PhotoFormat[]).map((item) => (
-              <button key={item} className={format === item ? "selected" : ""} onClick={() => { setFormat(item); setOffset({ x: 0, y: 0 }); setZoom(1); }} aria-pressed={format === item}>
+              <button key={item} className={format === item ? "selected" : ""} onClick={() => { setFormat(item); setFrame(0); setOffset({ x: 0, y: 0 }); setZoom(1); }} aria-pressed={format === item}>
                 <span className={`format-icon is-${item}`} />
                 <b>{formats[item].label}</b>
                 <small>{formats[item].detail}</small>
@@ -226,7 +190,7 @@ export function CampaignPhotoCreator() {
           <div ref={photoStage} className={`photo-stage is-${format}`} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={() => setDragging(false)} onPointerCancel={() => setDragging(false)}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={photo} alt="Sua foto para ajustar" draggable={false} style={{ transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})` }} />
-            <FrameArtwork frame={frame} />
+            {frameAssets[format][frame] && <NextImage className="official-frame" src={frameAssets[format][frame].src} alt="" fill sizes="(max-width: 560px) 100vw, 560px" priority />}
           </div>
           <p className="drag-hint"><Hand /> ARRASTE A FOTO PARA AJUSTAR</p>
           <div className="zoom-controls">
@@ -235,16 +199,18 @@ export function CampaignPhotoCreator() {
             <button aria-label="Aumentar foto" onClick={() => setZoom((value) => Math.min(2.2, value + .1))}><Plus /></button>
           </div>
           <div className="frame-heading"><b>MOLDURAS</b><span><Check /> MOLDURA ESCOLHIDA</span></div>
-          <div className="frame-list">
-            {frames.map((item) => (
-              <button key={item.id} className={frame === item.id ? "selected" : ""} onClick={() => setFrame(item.id)} aria-label={`Moldura ${item.name}`} aria-pressed={frame === item.id}>
-                <div className={`frame-thumb is-${format}`} style={{ backgroundImage: `url(${photo})`, backgroundPosition: `calc(50% + ${offset.x / 4}px) calc(50% + ${offset.y / 4}px)`, backgroundSize: "cover" }}><FrameArtwork frame={item.id} compact /></div>
-                <small>{String(item.id + 1).padStart(2, "0")}</small>
-                {frame === item.id && <i><Check /></i>}
+          {frameAssets[format].length ? <div className="frame-list">
+            {frameAssets[format].map((item, index) => (
+              <button key={item.src} className={frame === index ? "selected" : ""} onClick={() => setFrame(index)} aria-label={`Moldura ${item.name}`} aria-pressed={frame === index}>
+                <div className={`frame-thumb is-${format}`} style={{ backgroundImage: `url(${photo})`, backgroundPosition: `calc(50% + ${offset.x / 4}px) calc(50% + ${offset.y / 4}px)`, backgroundSize: "cover" }}>
+                  <NextImage src={item.src} alt="" fill sizes="120px" />
+                </div>
+                <small>{String(index + 1).padStart(2, "0")}</small>
+                {frame === index && <i><Check /></i>}
               </button>
             ))}
-          </div>
-          <button className="campaign-button button-yellow download-button" onClick={finishEditing}><Check /> CONTINUAR PARA SALVAR</button>
+          </div> : <div className="frames-coming"><ImagePlus /><b>MOLDURAS EM PREPARAÇÃO</b><span>Os PNGs oficiais deste formato serão adicionados em breve.</span></div>}
+          <button className="campaign-button button-yellow download-button" disabled={!frameAssets[format].length} onClick={finishEditing}><Check /> CONTINUAR PARA SALVAR</button>
         </section>
       )}
 
