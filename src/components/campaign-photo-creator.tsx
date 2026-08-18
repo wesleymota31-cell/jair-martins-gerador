@@ -116,8 +116,20 @@ export function CampaignPhotoCreator() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const download = () => {
+  const makeFile = async () => {
+    if (!preview) return null;
+    const blob = await fetch(preview).then((response) => response.blob());
+    return new File([blob], `jair-martins-${format}-${formats[format].width}x${formats[format].height}.png`, { type: "image/png" });
+  };
+
+  const download = async () => {
     if (!preview) return;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    const file = await makeFile();
+    if (isIOS && file && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({ files: [file], title: "Salvar foto de Jair Martins 1011" }).catch(() => undefined);
+      return;
+    }
     const link = document.createElement("a");
     link.download = `jair-martins-${format}-${formats[format].width}x${formats[format].height}.png`;
     link.href = preview;
@@ -126,10 +138,8 @@ export function CampaignPhotoCreator() {
   };
 
   const share = async () => {
-    if (!preview) return;
-    const blob = await fetch(preview).then((response) => response.blob());
-    if (!blob) return;
-    const file = new File([blob], `jair-martins-${format}.png`, { type: "image/png" });
+    const file = await makeFile();
+    if (!file) return;
     if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: "Jair Martins 1011" });
     else download();
   };
@@ -143,8 +153,8 @@ export function CampaignPhotoCreator() {
         <h1>SUA FOTO ESTÁ<br />PRONTA!</h1>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={`final-preview is-${format}`} src={preview} alt={`Prévia da foto para ${formats[format].label}`} />
-        <p className="success-copy">{saved ? "✓ Foto salva. Confira a galeria ou os downloads do celular." : "Toque abaixo para permitir que a foto seja salva no seu celular."}</p>
-        <button className="campaign-button button-yellow" onClick={download}><Download /> SALVAR NA GALERIA</button>
+        <p className="success-copy">{saved ? "✓ Foto salva. Confira a galeria ou os downloads do celular." : "No iPhone, toque no botão e escolha “Salvar Imagem” na tela que abrir."}</p>
+        <button className="campaign-button button-yellow" onClick={download}><Download /> SALVAR NO CELULAR</button>
         <button className="campaign-button button-yellow" onClick={share}><Share2 /> COMPARTILHAR FOTO</button>
         <button className="campaign-button button-blue" onClick={() => setPreview(null)}><RotateCcw /> VOLTAR E AJUSTAR</button>
         <button className="campaign-new-photo" onClick={() => { setPhoto(null); setPreview(null); }}><RotateCcw /> CRIAR OUTRA FOTO</button>
