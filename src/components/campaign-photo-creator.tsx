@@ -33,7 +33,10 @@ const frameAssets: Record<PhotoFormat, FrameAsset[]> = {
     { name: "Campanha Azul", src: "/frames/feed/frame-01.png" },
     { name: "Campanha Verde", src: "/frames/feed/frame-02.png" },
   ],
-  story: [],
+  story: [
+    { name: "Campanha Azul", src: "/frames/story/frame-01.png" },
+    { name: "Campanha Verde", src: "/frames/story/frame-02.png" },
+  ],
 };
 
 export function CampaignPhotoCreator() {
