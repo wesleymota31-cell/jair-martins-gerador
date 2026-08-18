@@ -9,9 +9,8 @@ npm install
 npm run dev
 ```
 
-## Cloudflare Pages
+## Cloudflare Workers
 
-- Framework: Next.js (Static HTML Export)
-- Build command: `npx next build`
-- Output directory: `out`
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
 - Production branch: `main`
