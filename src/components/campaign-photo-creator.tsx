@@ -9,7 +9,6 @@ import {
   Minus,
   Plus,
   RotateCcw,
-  Share2,
 } from "lucide-react";
 import NextImage from "next/image";
 import { ChangeEvent, PointerEvent, useCallback, useEffect, useRef, useState } from "react";
@@ -137,13 +136,6 @@ export function CampaignPhotoCreator() {
     setSaved(true);
   };
 
-  const share = async () => {
-    const file = await makeFile();
-    if (!file) return;
-    if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: "Jair Martins 1011" });
-    else download();
-  };
-
   useEffect(() => () => { if (photo?.startsWith("blob:")) URL.revokeObjectURL(photo); }, [photo]);
 
   if (preview) {
@@ -155,9 +147,8 @@ export function CampaignPhotoCreator() {
         <img className={`final-preview is-${format}`} src={preview} alt={`Prévia da foto para ${formats[format].label}`} />
         <p className="success-copy">{saved ? "✓ Foto salva. Confira a galeria ou os downloads do celular." : "No iPhone, toque no botão e escolha “Salvar Imagem” na tela que abrir."}</p>
         <button className="campaign-button button-yellow" onClick={download}><Download /> SALVAR NO CELULAR</button>
-        <button className="campaign-button button-yellow" onClick={share}><Share2 /> COMPARTILHAR FOTO</button>
         <button className="campaign-button button-blue" onClick={() => setPreview(null)}><RotateCcw /> VOLTAR E AJUSTAR</button>
-        <button className="campaign-new-photo" onClick={() => { setPhoto(null); setPreview(null); }}><RotateCcw /> CRIAR OUTRA FOTO</button>
+        <button className="campaign-button button-green" onClick={() => { setPhoto(null); setPreview(null); }}><RotateCcw /> CRIAR OUTRA FOTO</button>
         <CampaignFooter />
       </main>
     );
@@ -239,7 +230,6 @@ function CampaignFooter() {
     <footer className="campaign-footer">
       <div className="campaign-footer-inner">
         <div className="campaign-footer-head">
-          <NextImage src="/campaign/logo-jair.png" alt="Jair Martins 1011" width={606} height={161} />
           <span>Jair Martins · Deputado Federal · Pará · 1011</span>
         </div>
         <div className="campaign-footer-rule" />
