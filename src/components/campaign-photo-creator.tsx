@@ -100,7 +100,9 @@ export function CampaignPhotoCreator() {
     canvas.width = canvasWidth; canvas.height = canvasHeight;
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
-    const baseScale = Math.max(canvasWidth / image.width, canvasHeight / image.height);
+    ctx.fillStyle = "#012D61";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    const baseScale = Math.min(canvasWidth / image.width, canvasHeight / image.height);
     const scale = baseScale * zoom;
     const width = image.width * scale, height = image.height * scale;
     const offsetScaleX = canvasWidth / (photoStage.current?.clientWidth || 360);
@@ -201,7 +203,7 @@ export function CampaignPhotoCreator() {
           </div>
           <p className="drag-hint"><Hand /> ARRASTE A FOTO PARA AJUSTAR</p>
           <div className="zoom-controls">
-            <button aria-label="Diminuir foto" onClick={() => setZoom((value) => Math.max(.75, value - .1))}><Minus /></button>
+            <button aria-label="Diminuir foto" onClick={() => setZoom((value) => Math.max(.35, value - .1))}><Minus /></button>
             <button className="center-control" onClick={() => { setOffset({ x: 0, y: 0 }); setZoom(1); }}>CENTRALIZAR</button>
             <button aria-label="Aumentar foto" onClick={() => setZoom((value) => Math.min(2.2, value + .1))}><Plus /></button>
           </div>
@@ -209,7 +211,7 @@ export function CampaignPhotoCreator() {
           {frameAssets[format].length ? <div className="frame-list">
             {frameAssets[format].map((item, index) => (
               <button key={item.src} className={frame === index ? "selected" : ""} onClick={() => setFrame(index)} aria-label={`Moldura ${item.name}`} aria-pressed={frame === index}>
-                <div className={`frame-thumb is-${format}`} style={{ backgroundImage: `url(${photo})`, backgroundPosition: `calc(50% + ${offset.x / 4}px) calc(50% + ${offset.y / 4}px)`, backgroundSize: "cover" }}>
+                <div className={`frame-thumb is-${format}`} style={{ backgroundImage: `url(${photo})`, backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
                   <NextImage src={item.src} alt="" fill sizes="120px" />
                 </div>
                 <small>{String(index + 1).padStart(2, "0")}</small>
